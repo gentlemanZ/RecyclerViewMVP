@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.triplebyteinterview.model.Transaction;
+import com.example.android.triplebyteinterview.model.DailyWeatherData;
 
 public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.TransactionViewHolder> {
     private TransactionListContract.Presenter presenter;
@@ -26,13 +26,8 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
 
     @Override
     public void onBindViewHolder(TransactionViewHolder holder, int position) {
-        Transaction transaction = presenter.getDataByIndex(position);
-        String transactionName = transaction.getTransactionName();
-        String date = transaction.getDate();
-        Float amount = transaction.getAmount();
-        holder.transactionNameTextView.setText(transactionName);
-        holder.transactionDateTextView.setText(date);
-        holder.transactionAmountTextView.setText(amount + "");
+        DailyWeatherData dailyWeatherData = presenter.getDataByIndex(position);
+        holder.transactionNameTextView.setText(dailyWeatherData.getApparentTemperatureHighTime());
     }
 
     @Override
