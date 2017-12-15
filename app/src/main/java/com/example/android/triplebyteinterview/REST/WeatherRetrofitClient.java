@@ -7,25 +7,27 @@ import com.example.android.triplebyteinterview.model.DailyWeatherList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-class WeatherRetrofiClient {
+public class WeatherRetrofitClient {
     private static final String BASE_URL = "https://api.forecast.io/";
-    private static WeatherRetrofiClient INSTANCE;
+    private static WeatherRetrofitClient INSTANCE;
     private WeatherRetrofitApi weatherRetrofitApi;
 
 
-    private WeatherRetrofiClient() {
+    private WeatherRetrofitClient() {
         clientInitialize();
     }
 
-    public static WeatherRetrofiClient getInstance() {
+    public static WeatherRetrofitClient getInstance() {
         if (INSTANCE == null) {
-            return INSTANCE = new WeatherRetrofiClient();
+            return INSTANCE = new WeatherRetrofitClient();
         } else {
             return INSTANCE;
         }
@@ -48,9 +50,14 @@ class WeatherRetrofiClient {
     }
 
     private void clientInitialize() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().excludeFieldsWithModifiers().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         this.weatherRetrofitApi = retrofit.create(WeatherRetrofitApi.class);

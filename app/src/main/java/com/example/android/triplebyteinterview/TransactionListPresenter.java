@@ -2,18 +2,24 @@ package com.example.android.triplebyteinterview;
 
 import android.support.annotation.Nullable;
 
+import com.example.android.triplebyteinterview.REST.WeatherRetrofitClient;
+import com.example.android.triplebyteinterview.model.DailyWeatherData;
 import com.example.android.triplebyteinterview.model.DailyWeatherList;
-import com.example.android.triplebyteinterview.model.Transaction;
 
 import java.util.LinkedList;
+import java.util.List;
 
 class TransactionListPresenter implements TransactionListContract.Presenter, GetDailyWeatherListCallback {
     private TransactionListContract.View view;
-    private LinkedList<Transaction> mockedData = new LinkedList<>();
+    private List<DailyWeatherData> mockedData = new LinkedList<>();
+    private WeatherRetrofitClient client;
 
     TransactionListPresenter(TransactionListContract.View view) {
         this.view = view;
-        initMockedData();
+        client = WeatherRetrofitClient.getInstance();
+
+        //try out a call from init function
+        client.getDailyWeather(this);
     }
 
     @Override
@@ -22,23 +28,17 @@ class TransactionListPresenter implements TransactionListContract.Presenter, Get
     }
 
     @Override
-    public Transaction getDataByIndex(int position) {
+    public DailyWeatherData getDataByIndex(int position) {
         return mockedData.get(position);
     }
 
     @Override
     public void onGetDailyWeatherListCallbackSuccess(DailyWeatherList dailyWeatherList) {
-
+        mockedData = dailyWeatherList.getDailyWeatherData();
     }
 
     @Override
     public void onGetDailyWeatherListCallbackFailure(@Nullable Throwable throwable) {
-
+        view.displayToast(throwable + "");
     }
-    private void initMockedData() {
-        mockedData.add(new Transaction("Food", "12/6/2017", 35.90f));
-        mockedData.add(new Transaction("drink", "12/6/2017", 5.90f));
-    }
-
-
 }

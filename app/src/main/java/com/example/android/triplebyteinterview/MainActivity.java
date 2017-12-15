@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements TransactionListContract.View {
     private RecyclerView transactionListView;
@@ -59,5 +60,10 @@ public class MainActivity extends AppCompatActivity implements TransactionListCo
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void displayToast(String throwable) {
+        Toast.makeText(this, throwable, Toast.LENGTH_SHORT).show();
     }
 }
